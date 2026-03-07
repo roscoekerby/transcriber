@@ -115,6 +115,7 @@ STYLES = {
         "OutlineColour": _ac(0,0,0),       "BackColour": _ac(0,0,0,180),
         "Bold": 1, "Italic": 0, "Outline": 3, "Shadow": 0,
         "BorderStyle": 1, "Alignment": 2, "MarginV": 40,
+        "PIL_Scale": 0.71,
     },
     "Classic": {
         "desc": "White text, black outline — YouTube standard",
@@ -123,6 +124,7 @@ STYLES = {
         "OutlineColour": _ac(0,0,0),       "BackColour": _ac(0,0,0,128),
         "Bold": 0, "Italic": 0, "Outline": 2, "Shadow": 1,
         "BorderStyle": 1, "Alignment": 2, "MarginV": 30,
+        "PIL_Scale": 0.91,
     },
     "Yellow Highlight": {
         "desc": "Yellow bold — high contrast on dark backgrounds",
@@ -131,6 +133,7 @@ STYLES = {
         "OutlineColour": _ac(0,0,0),       "BackColour": _ac(0,0,0,128),
         "Bold": 1, "Italic": 0, "Outline": 2, "Shadow": 1,
         "BorderStyle": 1, "Alignment": 2, "MarginV": 30,
+        "PIL_Scale": 0.91,
     },
     "Subtitle Box": {
         "desc": "White on dark box — documentary / podcast style",
@@ -139,6 +142,7 @@ STYLES = {
         "OutlineColour": _ac(0,0,0),       "BackColour": _ac(0,0,0,100),
         "Bold": 0, "Italic": 0, "Outline": 0, "Shadow": 0,
         "BorderStyle": 3, "Alignment": 2, "MarginV": 20,
+        "PIL_Scale": 0.91,
     },
     "Minimal": {
         "desc": "Small clean white — non-distracting",
@@ -147,6 +151,7 @@ STYLES = {
         "OutlineColour": _ac(30,30,30),    "BackColour": _ac(0,0,0,180),
         "Bold": 0, "Italic": 0, "Outline": 1, "Shadow": 0,
         "BorderStyle": 1, "Alignment": 2, "MarginV": 20,
+        "PIL_Scale": 0.91,
     },
     "Top Center": {
         "desc": "Classic white at top — for bottom-heavy visuals",
@@ -155,6 +160,7 @@ STYLES = {
         "OutlineColour": _ac(0,0,0),       "BackColour": _ac(0,0,0,128),
         "Bold": 0, "Italic": 0, "Outline": 2, "Shadow": 1,
         "BorderStyle": 1, "Alignment": 8, "MarginV": 20,
+        "PIL_Scale": 0.91,
     },
 }
 
@@ -231,11 +237,13 @@ def default_pos(style: dict) -> tuple:
     return (x, y)
 
 def render_preview(frame_img, caption_text: str, style: dict,
-                   pos_x: float, pos_y: float, w: int, h: int, fontsize: int = None):
+                   pos_x: float, pos_y: float, w: int, h: int,
+                   fontsize: int = None, play_res_x: int = 1920, play_res_y: int = 1080):
     """
     Returns (PIL Image, text_bbox=(x0,y0,x1,y1)).
-    fontsize is in ASS units (pixels at 1080p). Preview scales it to canvas size
-    using the same ratio, so what you see matches what gets burned.
+    fontsize is in ASS script units. Scale is computed the same way ASS renderers
+    do it: min(canvas_w/PlayResX, canvas_h/PlayResY), so the preview matches the
+    burned output regardless of video orientation or aspect ratio.
     """
     from PIL import Image, ImageDraw
 
@@ -255,9 +263,12 @@ def render_preview(frame_img, caption_text: str, style: dict,
     outline_c  = color("OutlineColour",  255)[:3]
     back_rgba  = color("BackColour")
 
-    # Scale font exactly as ASS does: fontsize is px at PlayResY=1080
+    # Match ASS renderer: use min scale across both axes so font size is correct
+    # for any aspect ratio (landscape, portrait, square).
     ass_fontsize = fontsize if fontsize is not None else style["Fontsize"]
-    font_size = max(6, int(ass_fontsize * h / 1080))
+    scale = min(w / play_res_x, h / play_res_y)
+    scale_factor = style.get("PIL_Scale", 1.0)
+    font_size = max(6, int(ass_fontsize * scale_factor * scale))
     font = _load_pil_font(style["Fontname"], style["Bold"], font_size)
 
     cx = int(pos_x * w); cy = int(pos_y * h)
@@ -275,15 +286,14 @@ def render_preview(frame_img, caption_text: str, style: dict,
         img = Image.alpha_composite(img.convert("RGBA"), overlay).convert("RGB")
 
     draw = ImageDraw.Draw(img)
-    # Outline width scales the same way as font
-    ow = max(0, round(style["Outline"] * h / 1080))
+    ow = max(0, round(style["Outline"] * scale))
     if ow:
         for dx in range(-ow, ow+1):
             for dy in range(-ow, ow+1):
                 if dx or dy:
                     draw.text((tx+dx, ty+dy), caption_text, font=font, fill=outline_c)
     if style["Shadow"]:
-        so = max(1, round(style["Shadow"] * h / 1080))
+        so = max(1, round(style["Shadow"] * scale))
         draw.text((tx+so, ty+so), caption_text, font=font, fill=(0,0,0))
     draw.text((tx, ty), caption_text, font=font, fill=primary_c)
 
@@ -306,12 +316,28 @@ def get_video_resolution(video_path: str):
          "-show_entries", "stream=width,height", "-of", "csv=s=x:p=0", video_path],
         capture_output=True, text=True,
     )
+    w, h = 1920, 1080
     if r.returncode == 0 and "x" in r.stdout:
         try:
-            w, h = r.stdout.strip().split("x")
-            return int(w), int(h)
+            w_str, h_str = r.stdout.strip().split("x")
+            w, h = int(w_str), int(h_str)
         except Exception: pass
-    return 1920, 1080
+
+    try:
+        rot_r = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "v:0",
+             "-show_entries", "stream_tags=rotate",
+             "-of", "default=noprint_wrappers=1:nokey=1", video_path],
+            capture_output=True, text=True,
+        )
+        angle_str = rot_r.stdout.strip()
+        if angle_str:
+            angle = int(float(angle_str))
+            if abs(angle) in (90, 270):
+                w, h = h, w
+    except Exception: pass
+
+    return w, h
 
 def get_video_duration(video_path: str) -> float:
     r = subprocess.run(
@@ -446,7 +472,7 @@ class CaptionApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Video Caption Burner")
-        self.geometry("1060x840")
+        self.geometry("1060x780")
         self.resizable(True, True)
         self.configure(bg=self.C["BG"])
         self.cfg = load_config()
@@ -465,7 +491,12 @@ class CaptionApp(tk.Tk):
         self._video_fps       = 30.0
         self._video_duration  = 0.0
         self._play_job        = None
-        self._preview_captions = []
+        self._raw_captions    = []             # parsed from SRT, before processing
+        self._preview_captions = []            # after rechunk + replacements
+        self._video_res       = (1920, 1080)   # (width, height) of loaded video
+        self._canvas_w        = PREVIEW_W      # explicit canvas size — avoids winfo race
+        self._canvas_h        = PREVIEW_H
+        self._display_rotate  = 0             # rotation angle from video metadata (0/90/180/270)
         self._build_ui()
         self.after(200, self._update_preview)   # initial render after layout settles
 
@@ -480,25 +511,51 @@ class CaptionApp(tk.Tk):
 
     def _build_ui(self):
         C = self.C
-        # Title
-        hdr = tk.Frame(self, bg=C["BG"], pady=12); hdr.pack(fill="x")
+
+        # ── Scrollable root ────────────────────────────────────────────────────
+        _vscroll = tk.Scrollbar(self, orient="vertical")
+        _vscroll.pack(side="right", fill="y")
+        _scroll_cv = tk.Canvas(self, bg=C["BG"], highlightthickness=0,
+                               yscrollcommand=_vscroll.set)
+        _scroll_cv.pack(side="left", fill="both", expand=True)
+        _vscroll.config(command=_scroll_cv.yview)
+
+        main = tk.Frame(_scroll_cv, bg=C["BG"])
+        _win_id = _scroll_cv.create_window((0, 0), window=main, anchor="nw")
+
+        def _on_frame_configure(e):
+            _scroll_cv.configure(scrollregion=_scroll_cv.bbox("all"))
+        def _on_canvas_configure(e):
+            _scroll_cv.itemconfig(_win_id, width=e.width)
+        main.bind("<Configure>", _on_frame_configure)
+        _scroll_cv.bind("<Configure>", _on_canvas_configure)
+
+        def _mousewheel(e):
+            # Don't steal scroll from Text / Listbox widgets
+            if isinstance(e.widget, (tk.Text, tk.Listbox, tk.Scale)):
+                return
+            _scroll_cv.yview_scroll(int(-1 * (e.delta / 120)), "units")
+        self.bind_all("<MouseWheel>", _mousewheel)
+
+        # ── Title ──────────────────────────────────────────────────────────────
+        hdr = tk.Frame(main, bg=C["BG"], pady=6); hdr.pack(fill="x")
         tk.Label(hdr, text="Video Caption Burner",
-                 font=("Segoe UI", 17, "bold"), fg=C["TEXT"], bg=C["BG"]).pack()
+                 font=("Segoe UI", 14, "bold"), fg=C["TEXT"], bg=C["BG"]).pack()
         tk.Label(hdr, text="Click or drag on the preview to position captions  •  ASS subtitles via ffmpeg",
                  font=("Segoe UI", 9), fg=C["MUT"], bg=C["BG"]).pack()
 
-        # Two-column body
-        body = tk.Frame(self, bg=C["BG"]); body.pack(fill="both", expand=True, padx=14, pady=(0,6))
+        # ── Two-column body ────────────────────────────────────────────────────
+        body = tk.Frame(main, bg=C["BG"]); body.pack(fill="x", padx=14, pady=(0,4))
         left = tk.Frame(body, bg=C["BG"], width=456)
         left.pack(side="left", fill="y", padx=(0,10))
         left.pack_propagate(False)
         self._build_left(left)
         right = tk.Frame(body, bg=C["BG"])
-        right.pack(side="left", fill="both", expand=True)
+        right.pack(side="left", fill="x", expand=True)
         self._build_right(right)
 
-        # Progress
-        pf = tk.Frame(self, bg=C["BG"], padx=14, pady=3); pf.pack(fill="x")
+        # ── Progress ───────────────────────────────────────────────────────────
+        pf = tk.Frame(main, bg=C["BG"], padx=14, pady=2); pf.pack(fill="x")
         self.prog_lbl = tk.Label(pf, text="", font=("Segoe UI", 9), fg=C["MUT"], bg=C["BG"])
         self.prog_lbl.pack(anchor="w")
         self.prog_bar = ttk.Progressbar(pf, mode="determinate")
@@ -506,20 +563,20 @@ class CaptionApp(tk.Tk):
         sty = ttk.Style(self); sty.theme_use("default")
         sty.configure("TProgressbar", troughcolor=C["PANEL"], background=C["ACCENT"], thickness=8)
 
-        # Log
-        lf = tk.Frame(self, bg=C["BG"], padx=14); lf.pack(fill="both", expand=True)
+        # ── Log ────────────────────────────────────────────────────────────────
+        lf = tk.Frame(main, bg=C["BG"], padx=14); lf.pack(fill="x")
         tk.Label(lf, text="Log", font=("Segoe UI", 9, "bold"), fg=C["MUT"], bg=C["BG"]).pack(anchor="w")
         self.log_box = tk.Text(lf, font=("Consolas", 9), bg=C["PANEL"], fg=C["TEXT"],
                                insertbackground=C["TEXT"], relief="flat", bd=0,
-                               state="disabled", height=5)
+                               state="disabled", height=4)
         sb = tk.Scrollbar(self.log_box); sb.pack(side="right", fill="y")
         self.log_box.config(yscrollcommand=sb.set); sb.config(command=self.log_box.yview)
-        self.log_box.pack(fill="both", expand=True, pady=(2,0))
+        self.log_box.pack(fill="x", pady=(2,0))
         for tag, col in [("ok","#64ffda"),("warn","#ffd700"),("fail",C["ACCENT"]),("info",C["MUT"])]:
             self.log_box.tag_configure(tag, foreground=col)
 
-        # Export button
-        bf = tk.Frame(self, bg=C["BG"], pady=8); bf.pack()
+        # ── Export button ──────────────────────────────────────────────────────
+        bf = tk.Frame(main, bg=C["BG"], pady=6); bf.pack()
         self.btn = tk.Button(bf, text="Burn Captions  →  Export Video", command=self._start,
                              font=("Segoe UI", 11, "bold"), bg=C["ACCENT"], fg="white",
                              relief="flat", bd=0, padx=28, pady=9, cursor="hand2",
@@ -530,7 +587,7 @@ class CaptionApp(tk.Tk):
         C = self.C
 
         def panel(title, fn):
-            f = tk.Frame(parent, bg=C["PANEL"], pady=8); f.pack(fill="x", pady=(0,6))
+            f = tk.Frame(parent, bg=C["PANEL"], pady=5); f.pack(fill="x", pady=(0,4))
             tk.Label(f, text=title, font=("Segoe UI", 9, "bold"),
                      fg=C["MUT"], bg=C["PANEL"]).pack(anchor="w", padx=14, pady=(0,3))
             fn(f)
@@ -619,7 +676,7 @@ class CaptionApp(tk.Tk):
             self._wlbl.pack(side="left")
             def on_words(v):
                 self._wlbl.config(text=str(int(float(v))))
-                self._update_preview()
+                self._rebuild_preview_captions()
             tk.Scale(wf, from_=1, to=15, orient="horizontal", variable=self.words_var,
                      command=on_words, bg=C["PANEL"], fg=C["TEXT"], troughcolor=C["ENTRY"],
                      highlightthickness=0, relief="flat", length=175, showvalue=False,
@@ -661,7 +718,7 @@ class CaptionApp(tk.Tk):
         self._canvas = tk.Canvas(prev_tab, bg="#0d0d1a", highlightthickness=1,
                                  highlightbackground=C["PANEL"],
                                  width=PREVIEW_W, height=PREVIEW_H, cursor="fleur")
-        self._canvas.pack(fill="both", expand=True, pady=(4,0))
+        self._canvas.pack(anchor="center", pady=(4,0))
         self._canvas.bind("<Button-1>",        self._on_click)
         self._canvas.bind("<B1-Motion>",       self._on_drag)
         self._canvas.bind("<ButtonRelease-1>", lambda e: None)
@@ -674,8 +731,14 @@ class CaptionApp(tk.Tk):
             tk.Label(prev_tab, text="Install Pillow for styled preview:  pip install Pillow",
                      font=("Segoe UI", 8), fg="#ffd700", bg=C["BG"]).pack(pady=(2,0))
 
+        # Video info bar
+        vif = tk.Frame(prev_tab, bg=C["BG"]); vif.pack(fill="x", pady=(2,0))
+        self._video_info_lbl = tk.Label(vif, text="No video loaded",
+                                        font=("Segoe UI", 7), fg=C["MUT"], bg=C["BG"])
+        self._video_info_lbl.pack(side="left", padx=2)
+
         # Current caption display
-        cl = tk.Frame(prev_tab, bg=C["PANEL"], pady=3); cl.pack(fill="x", pady=(4,0))
+        cl = tk.Frame(prev_tab, bg=C["PANEL"], pady=3); cl.pack(fill="x", pady=(2,0))
         tk.Label(cl, text="Caption:", font=("Segoe UI", 8), fg=C["MUT"],
                  bg=C["PANEL"]).pack(side="left", padx=(8,4))
         self._cap_lbl = tk.Label(cl, text="—", font=("Segoe UI", 9, "bold"),
@@ -738,16 +801,16 @@ class CaptionApp(tk.Tk):
                   font=("Segoe UI", 8, "bold"), bg=C["ACCENT"], fg="white",
                   relief="flat", bd=0, padx=8, pady=2, cursor="hand2").pack(side="right", padx=(4,0))
 
-        ef = tk.Frame(srt_tab, bg=C["BG"]); ef.pack(fill="both", expand=True, padx=6, pady=(0,6))
+        ef = tk.Frame(srt_tab, bg=C["BG"]); ef.pack(fill="x", padx=6, pady=(0,6))
         self._srt_editor = tk.Text(ef, font=("Consolas", 9), bg=C["PANEL"], fg=C["TEXT"],
                                    insertbackground=C["TEXT"], relief="flat", bd=0,
-                                   wrap="none", undo=True)
+                                   wrap="none", undo=True, height=18)
         esb_y = tk.Scrollbar(ef, command=self._srt_editor.yview)
         esb_y.pack(side="right", fill="y")
         esb_x = tk.Scrollbar(ef, orient="horizontal", command=self._srt_editor.xview)
         esb_x.pack(side="bottom", fill="x")
         self._srt_editor.config(yscrollcommand=esb_y.set, xscrollcommand=esb_x.set)
-        self._srt_editor.pack(side="left", fill="both", expand=True)
+        self._srt_editor.pack(side="left", fill="x", expand=True)
 
     # ── Preview logic ──────────────────────────────────────────────────────────
 
@@ -766,8 +829,8 @@ class CaptionApp(tk.Tk):
         self._move_caption(event.x, event.y)
 
     def _move_caption(self, cx: int, cy: int):
-        w = self._canvas.winfo_width() or PREVIEW_W
-        h = self._canvas.winfo_height() or PREVIEW_H
+        w = self._canvas_w
+        h = self._canvas_h
         self._pos_x = max(0.0, min(1.0, cx / w))
         self._pos_y = max(0.0, min(1.0, cy / h))
         self._pos_custom = True
@@ -789,14 +852,59 @@ class CaptionApp(tk.Tk):
         h = int(s // 3600); m = int((s % 3600) // 60); sec = int(s % 60)
         return f"{h}:{m:02d}:{sec:02d}"
 
+    def _cv2_to_pil(self, frame) -> "Image":
+        """Convert a cv2 BGR frame to a PIL Image, rotating to match display orientation."""
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        img = Image.fromarray(frame_rgb)
+        angle = getattr(self, "_display_rotate", 0)
+        if angle:
+            # PIL rotate is CCW; video rotate tag means "rotate CCW by this angle to display"
+            img = img.rotate(angle, expand=True)
+        return img
+
     def _get_caption_at(self, t: float) -> str:
         for cap in self._preview_captions:
             if cap["start"] <= t <= cap["end"]:
                 return cap["text"]
         return ""
 
+    def _resize_preview_canvas(self, vw: int, vh: int):
+        """Resize the preview canvas to match the video's aspect ratio."""
+        MAX_DIM = 460
+        aspect = vw / vh if vh else 16 / 9
+        if aspect >= 1:          # landscape / square
+            pw = MAX_DIM
+            ph = max(1, int(MAX_DIM / aspect))
+        else:                    # portrait
+            ph = MAX_DIM
+            pw = max(1, int(MAX_DIM * aspect))
+        self._canvas_w = pw      # store explicitly so _update_preview never races winfo
+        self._canvas_h = ph
+        self._canvas.config(width=pw, height=ph)
+
     def _load_video_for_preview(self, path: str):
         """Open the video for preview. Uses cv2 if available, else ffprobe for duration."""
+        # --- Step 1: get display dimensions from ffprobe (already accounts for rotation) ---
+        disp_w, disp_h = get_video_resolution(path)
+
+        # --- Step 2: detect rotation metadata so we can rotate cv2 frames later ---
+        self._display_rotate = 0
+        try:
+            rot_r = subprocess.run(
+                ["ffprobe", "-v", "error", "-select_streams", "v:0",
+                 "-show_entries", "stream_tags=rotate",
+                 "-of", "default=noprint_wrappers=1:nokey=1", path],
+                capture_output=True, text=True,
+            )
+            angle_str = rot_r.stdout.strip()
+            if angle_str:
+                self._display_rotate = int(float(angle_str))
+        except Exception:
+            pass
+
+        self._video_res = (disp_w, disp_h)
+
+        # --- Step 3: open for frame reading ---
         if CV2_AVAILABLE:
             if self._video_cap:
                 self._video_cap.release()
@@ -810,6 +918,15 @@ class CaptionApp(tk.Tk):
                 self._video_duration = get_video_duration(path)
         else:
             self._video_duration = get_video_duration(path)
+
+        # Update info label
+        rot_note = f"  (rotated {self._display_rotate}°)" if self._display_rotate else ""
+        fps_str  = f"{self._video_fps:.2f}".rstrip("0").rstrip(".")
+        info = f"{disp_w}×{disp_h}  {fps_str} fps{rot_note}"
+        if hasattr(self, "_video_info_lbl"):
+            self._video_info_lbl.config(text=info)
+
+        self._resize_preview_canvas(*self._video_res)
 
         if self._video_duration > 0:
             self._timeline_slider.config(to=self._video_duration)
@@ -826,8 +943,7 @@ class CaptionApp(tk.Tk):
             self._video_cap.set(cv2.CAP_PROP_POS_MSEC, self._current_time * 1000)
             ret, frame = self._video_cap.read()
             if ret and PIL_AVAILABLE:
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self._frame_img = Image.fromarray(frame_rgb)
+                self._frame_img = self._cv2_to_pil(frame)
             else:
                 self._frame_img = None
 
@@ -849,8 +965,7 @@ class CaptionApp(tk.Tk):
             self._video_cap.set(cv2.CAP_PROP_POS_MSEC, t * 1000)
             ret, frame = self._video_cap.read()
             if ret and PIL_AVAILABLE:
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self._frame_img = Image.fromarray(frame_rgb)
+                self._frame_img = self._cv2_to_pil(frame)
             self._update_preview()
         else:
             # Without cv2, just update caption text (frame extracted on release)
@@ -910,8 +1025,7 @@ class CaptionApp(tk.Tk):
         ret, frame = self._video_cap.read()
         if ret:
             if PIL_AVAILABLE:
-                frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                self._frame_img = Image.fromarray(frame_rgb)
+                self._frame_img = self._cv2_to_pil(frame)
             pos_ms = self._video_cap.get(cv2.CAP_PROP_POS_MSEC)
             self._current_time = pos_ms / 1000.0
             self._timeline_var.set(self._current_time)
@@ -927,21 +1041,43 @@ class CaptionApp(tk.Tk):
             self._play_btn.config(text="▶  Play")
             self._play_job = None
 
+    def _rebuild_preview_captions(self):
+        """Re-apply rechunking + word replacements to raw captions, then refresh."""
+        if not self._raw_captions:
+            return
+        caps = apply_replacements(self._raw_captions, self.repl_table.get_replacements())
+        caps = rechunk_captions(caps, self.words_var.get())
+        self._preview_captions = caps
+        self._update_preview()
+
     def _update_preview(self):
         if not hasattr(self, "_canvas"):
             return
-        w = self._canvas.winfo_width() or PREVIEW_W
-        h = self._canvas.winfo_height() or PREVIEW_H
+        w = self._canvas_w
+        h = self._canvas_h
         cap_text = self._get_caption_at(self._current_time)
         text = cap_text if cap_text else ("(no caption at this time)" if self._preview_captions else "Load a video & SRT to preview")
         style = STYLES.get(self.style_var.get(), STYLES["Bold Impact"])
+        vres = getattr(self, "_video_res", (1920, 1080))
 
         if PIL_AVAILABLE:
             try:
                 from PIL import ImageTk
                 fs = self._get_fontsize() if hasattr(self, "fontsize_var") else 28
-                img, bbox = render_preview(self._frame_img, text or "Sample caption",
-                                           style, self._pos_x, self._pos_y, w, h, fontsize=fs)
+                # Compute and display diagnostic font size info
+                _scale = min(w / vres[0], h / vres[1])
+                _preview_fs = max(6, int(fs * _scale))
+                if hasattr(self, "_video_info_lbl"):
+                    _cur = self._video_info_lbl.cget("text")
+                    # Strip any previous font annotation then append
+                    _base = _cur.split(" | font:")[0]
+                    self._video_info_lbl.config(
+                        text=f"{_base} | font: {_preview_fs}px preview  /  {fs}px video"
+                    )
+                img, bbox = render_preview(self._frame_img, text,
+                                           style, self._pos_x, self._pos_y, w, h,
+                                           fontsize=fs,
+                                           play_res_x=vres[0], play_res_y=vres[1])
                 self._cap_bbox   = bbox
                 self._photo_img  = ImageTk.PhotoImage(img)
                 self._canvas.delete("all")
@@ -982,9 +1118,9 @@ class CaptionApp(tk.Tk):
             text = Path(path).read_text(encoding="utf-8", errors="ignore")
             self._srt_editor.delete("1.0", "end")
             self._srt_editor.insert("1.0", text.rstrip("\n"))
-            self._preview_captions = parse_srt(text)
+            self._raw_captions = parse_srt(text)
             self._log(f"Loaded SRT into editor: {Path(path).name}", "info")
-            self._update_preview()
+            self._rebuild_preview_captions()
         except Exception as e:
             self._log(f"[WARN] Could not load SRT into editor: {e}", "warn")
 
@@ -992,9 +1128,9 @@ class CaptionApp(tk.Tk):
         text = self._srt_editor.get("1.0", "end").strip()
         if text:
             try:
-                self._preview_captions = parse_srt(text)
+                self._raw_captions = parse_srt(text)
+                self._rebuild_preview_captions()
                 self._log(f"Preview updated — {len(self._preview_captions)} captions.", "info")
-                self._update_preview()
             except Exception as e:
                 self._log(f"[WARN] Could not parse editor SRT: {e}", "warn")
 
@@ -1135,8 +1271,8 @@ class CaptionApp(tk.Tk):
                     def _load_generated(t=srt_text):
                         self._srt_editor.delete("1.0", "end")
                         self._srt_editor.insert("1.0", t.rstrip("\n"))
-                        self._preview_captions = parse_srt(t)
-                        self._update_preview()
+                        self._raw_captions = parse_srt(t)
+                        self._rebuild_preview_captions()
                     self.after(0, _load_generated)
                 except Exception as e:
                     self._log(f"[WARN] SRT save: {e}", "warn")

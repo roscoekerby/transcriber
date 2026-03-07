@@ -1,0 +1,440 @@
+ffmpeg version 8.0.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 15.2.0 (Rev8, Built by MSYS2 project)
+  configuration: --enable-gpl --enable-version3 --enable-static --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-lcms2 --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-libsnappy --enable-zlib --enable-librist --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-libbluray --enable-libcaca --enable-libdvdnav --enable-libdvdread --enable-sdl2 --enable-libaribb24 --enable-libaribcaption --enable-libdav1d --enable-libdavs2 --enable-libopenjpeg --enable-libquirc --enable-libuavs3d --enable-libxevd --enable-libzvbi --enable-liboapv --enable-libqrencode --enable-librav1e --enable-libsvtav1 --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxeve --enable-libxvid --enable-libaom --enable-libjxl --enable-libvpx --enable-mediafoundation --enable-libass --enable-frei0r --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-liblensfun --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-dxva2 --enable-d3d11va --enable-d3d12va --enable-ffnvcodec --enable-libvpl --enable-nvdec --enable-nvenc --enable-vaapi --enable-libshaderc --enable-vulkan --enable-libplacebo --enable-opencl --enable-libcdio --enable-openal --enable-libgme --enable-libmodplug --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libshine --enable-libtheora --enable-libtwolame --enable-libvo-amrwbenc --enable-libcodec2 --enable-libilbc --enable-libgsm --enable-liblc3 --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-ladspa --enable-libbs2b --enable-libflite --enable-libmysofa --enable-librubberband --enable-libsoxr --enable-chromaprint --enable-whisper
+  libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100
+Splitting the commandline.
+Reading option '-y' ... matched as option 'y' (overwrite output files) with argument '1'.
+Reading option '-v' ... matched as option 'v' (set logging level) with argument 'debug'.
+Reading option '-i' ... matched as input url with argument 'test_base.mp4'.
+Reading option '-vf' ... matched as option 'vf' (alias for -filter:v (apply filters to video streams)) with argument 'ass=test.ass'.
+Reading option 'test_ass.mp4' ... matched as output url.
+Finished splitting the commandline.
+Parsing a group of options: global .
+Applying option y (overwrite output files) with argument 1.
+Applying option v (set logging level) with argument debug.
+Successfully parsed a group of options.
+Parsing a group of options: input url test_base.mp4.
+Successfully parsed a group of options.
+Opening an input file: test_base.mp4.
+[AVFormatContext @ 000002013fb65140] Opening 'test_base.mp4' for reading
+[file @ 000002013fb25900] Setting default whitelist 'file,crypto,data'
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] Format mov,mp4,m4a,3gp,3g2,mj2 probed with size=2048 and score=100
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] ISO: File Type Major Brand: isom
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] Unknown dref type 0x206c7275 size 12
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] Processing st: 0, edit list 0 - media time: 1024, duration: 64000
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] Offset DTS by 1024 to make first pts zero.
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] Setting codecpar->delay to 2 for stream st: 0
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] Before avformat_find_stream_info() pos: 12267 bytes read:12267 seeks:0 nb_streams:1
+[h264 @ 000002013fb66740] nal_unit_type: 7(SPS), nal_ref_idc: 3
+[h264 @ 000002013fb66740] Decoding VUI
+[h264 @ 000002013fb66740] nal_unit_type: 8(PPS), nal_ref_idc: 3
+[h264 @ 000002013fb66740] nal_unit_type: 7(SPS), nal_ref_idc: 3
+[h264 @ 000002013fb66740] Decoding VUI
+[h264 @ 000002013fb66740] nal_unit_type: 8(PPS), nal_ref_idc: 3
+[h264 @ 000002013fb66740] nal_unit_type: 6(SEI), nal_ref_idc: 0
+[h264 @ 000002013fb66740] nal_unit_type: 5(IDR), nal_ref_idc: 3
+[h264 @ 000002013fb66740] Format yuv420p chosen by get_format().
+[h264 @ 000002013fb66740] Reinit context to 1088x1920, pix_fmt: yuv420p
+[h264 @ 000002013fb66740] no picture 
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] All info found
+[mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb65140] After avformat_find_stream_info() pos: 1175 bytes read:12267 seeks:0 frames:1
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'test_base.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf62.3.100
+  Duration: 00:00:05.00, start: 0.000000, bitrate: 19 kb/s
+  Stream #0:0[0x1](und), 1, 1/12800: Video: h264 (High), 1 reference frame (avc1 / 0x31637661), yuv420p(progressive, left), 1080x1920 [SAR 1:1 DAR 9:16], 0/1, 15 kb/s, 25 fps, 25 tbr, 12800 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      vendor_id       : [0][0][0][0]
+      encoder         : Lavc62.11.100 libx264
+Successfully opened the file.
+Parsing a group of options: output url test_ass.mp4.
+Applying option vf (alias for -filter:v (apply filters to video streams)) with argument ass=test.ass.
+Successfully parsed a group of options.
+Opening an output file: test_ass.mp4.
+[out#0/mp4 @ 0000020140592200] No explicit maps, mapping streams automatically...
+[vost#0:0/libx264 @ 000002013fb67580] Created video stream from input stream 0:0
+[AVFilterGraph @ 0000020140380c80] Setting 'filename' to value 'test.ass'
+[Parsed_ass_0 @ 0000020140380d40] libass API version: 0x1704000
+[Parsed_ass_0 @ 0000020140380d40] libass source: commit: 0.17.4-16-ge60dddb7db62cc009175843bdb0b0dfedceebedb
+[Parsed_ass_0 @ 0000020140380d40] Raster: FreeType 2.14.1
+[Parsed_ass_0 @ 0000020140380d40] Shaper: FriBidi 1.0.16 (SIMPLE) HarfBuzz-ng 12.2.0 (COMPLEX)
+[Parsed_ass_0 @ 0000020140380d40] Initialized
+[Parsed_ass_0 @ 0000020140380d40] Using font provider directwrite (with GDI)
+[Parsed_ass_0 @ 0000020140380d40] File size: 631
+[Parsed_ass_0 @ 0000020140380d40] Style format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+[Parsed_ass_0 @ 0000020140380d40] [000002013fb6d820] Style: Default,Arial Black,88,&H00FFFFFF,&H0000FFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,3,0,2,10,10,40,1
+[Parsed_ass_0 @ 0000020140380d40] Event format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+[Parsed_ass_0 @ 0000020140380d40] Added subtitle file: 'test.ass' (2 styles, 1 events)
+detected 20 logical cores
+[h264 @ 000002013fb6e5c0] nal_unit_type: 7(SPS), nal_ref_idc: 3
+[h264 @ 000002013fb6e5c0] Decoding VUI
+[h264 @ 000002013fb6e5c0] nal_unit_type: 8(PPS), nal_ref_idc: 3
+[file @ 000002013fbf5b00] Setting default whitelist 'file,crypto,data'
+Successfully opened the file.
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> h264 (libx264))
+[vost#0:0/libx264 @ 000002013fb67580] Starting thread...
+[vf#0:0 @ 000002013fb70680] Starting thread...
+[vist#0:0/h264 @ 0000020140592040] [dec:h264 @ 000002014074bd00] Starting thread...
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb64ec0] Starting thread...
+Press [q] to stop, [?] for help
+[h264 @ 000002013fb6e5c0] nal_unit_type: 6(SEI), nal_ref_idc: 0
+[h264 @ 000002013fb6e5c0] nal_unit_type: 5(IDR), nal_ref_idc: 3
+[h264 @ 000002013fb6e5c0] Format yuv420p chosen by get_format().
+[h264 @ 000002013fb6e5c0] Reinit context to 1088x1920, pix_fmt: yuv420p
+[h264 @ 000002013fb6e5c0] no picture 
+[h264 @ 000002013fbb41c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 000002013fbb41c0] no picture 
+[h264 @ 0000020140703500] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400ed1c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb5580] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 00000201400edb80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140754300] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 000002013fbf94c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbf9b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140008880] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140008f40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400095c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517a40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517680] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140517e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140516b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fb6e5c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[AVFilterGraph @ 0000020146510240] Setting 'filename' to value 'test.ass'
+[h264 @ 000002013fbb41c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140703500] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400ed1c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb5580] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[Parsed_ass_0 @ 00000201437ce6c0] libass API version: 0x1704000
+[Parsed_ass_0 @ 00000201437ce6c0] libass source: commit: 0.17.4-16-ge60dddb7db62cc009175843bdb0b0dfedceebedb
+[Parsed_ass_0 @ 00000201437ce6c0] Raster: FreeType 2.14.1
+[Parsed_ass_0 @ 00000201437ce6c0] Shaper: FriBidi 1.0.16 (SIMPLE) HarfBuzz-ng 12.2.0 (COMPLEX)
+[Parsed_ass_0 @ 00000201437ce6c0] Initialized
+[Parsed_ass_0 @ 00000201437ce6c0] Using font provider directwrite (with GDI)
+[h264 @ 00000201400edb80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[Parsed_ass_0 @ 00000201437ce6c0] File size: 631
+[Parsed_ass_0 @ 00000201437ce6c0] Style format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+[Parsed_ass_0 @ 00000201437ce6c0] [000002013fb6d430] Style: Default,Arial Black,88,&H00FFFFFF,&H0000FFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,3,0,2,10,10,40,1
+[Parsed_ass_0 @ 00000201437ce6c0] Event format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+[Parsed_ass_0 @ 00000201437ce6c0] Added subtitle file: 'test.ass' (2 styles, 1 events)
+[graph -1 input from stream 0:0 @ 00000201437cea00] w:1080 h:1920 pixfmt:yuv420p tb:1/12800 fr:25/1 sar:1/1 csp:unknown range:unknown
+[format @ 00000201437ce900] Setting 'pix_fmts' to value 'yuv420p|yuvj420p|yuv422p|yuvj422p|yuv444p|yuvj444p|nv12|nv16|nv21|yuv420p10le|yuv422p10le|yuv444p10le|nv20le|gray|gray10le'
+[format @ 00000201437ce900] Setting 'color_ranges' to value 'tv|pc'
+Filter 'Parsed_ass_0' formats:
+  in[0] 'default': yuv420p rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray yuvj420p yuvj422p yuvj444p nv12 nv21 argb rgba abgr bgra gray16le yuv440p yuvj440p yuva420p rgb48le yuv420p16le yuv422p16le yuv444p16le ya8 bgr48le yuv420p9le yuv420p10le yuv422p10le yuv444p9le yuv444p10le yuv422p9le gbrp gbrp9le gbrp10le gbrp16le yuva422p yuva444p yuva420p9le yuva422p9le yuva444p9le yuva420p10le yuva422p10le yuva444p10le yuva420p16le yuva422p16le yuva444p16le nv16 nv20le ya16le gbrap gbrap16le 0rgb rgb0 0bgr bgr0 yuv420p12le yuv420p14le yuv422p12le yuv422p14le yuv444p12le yuv444p14le gbrp12le gbrp14le yuvj411p yuv440p10le yuv440p12le p010le gbrap12le gbrap10le gray12le gray10le p016le gray9le gray14le yuva422p12le yuva444p12le nv24 nv42 p210le p410le p216le p416le vuya vuyx p012le p212le p412le gbrap14le ayuv uyva vyu444 yuv444p10msble yuv444p12msble gbrp10msble gbrp12msble
+  out[0] 'default': yuv420p rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray yuvj420p yuvj422p yuvj444p nv12 nv21 argb rgba abgr bgra gray16le yuv440p yuvj440p yuva420p rgb48le yuv420p16le yuv422p16le yuv444p16le ya8 bgr48le yuv420p9le yuv420p10le yuv422p10le yuv444p9le yuv444p10le yuv422p9le gbrp gbrp9le gbrp10le gbrp16le yuva422p yuva444p yuva420p9le yuva422p9le yuva444p9le yuva420p10le yuva422p10le yuva444p10le yuva420p16le yuva422p16le yuva444p16le nv16 nv20le ya16le gbrap gbrap16le 0rgb rgb0 0bgr bgr0 yuv420p12le yuv420p14le yuv422p12le yuv422p14le yuv444p12le yuv444p14le gbrp12le gbrp14le yuvj411p yuv440p10le yuv440p12le p010le gbrap12le gbrap10le gray12le gray10le p016le gray9le gray14le yuva422p12le yuva444p12le nv24 nv42 p210le p410le p216le p416le vuya vuyx p012le p212le p412le gbrap14le ayuv uyva vyu444 yuv444p10msble yuv444p12msble gbrp10msble gbrp12msble
+Filter 'graph -1 input from stream 0:0' formats:
+  out[0] 'default': yuv420p
+Filter 'out_#0:0' formats:
+  in[0] 'default': yuv420p yuyv422 rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray monow monob pal8 yuvj420p yuvj422p yuvj444p uyvy422 uyyvyy411 bgr8 bgr4 bgr4_byte rgb8 rgb4 rgb4_byte nv12 nv21 argb rgba abgr bgra gray16be gray16le yuv440p yuvj440p yuva420p rgb48be rgb48le rgb565be rgb565le rgb555be rgb555le bgr565be bgr565le bgr555be bgr555le vaapi yuv420p16le yuv420p16be yuv422p16le yuv422p16be yuv444p16le yuv444p16be dxva2_vld rgb444le rgb444be bgr444le bgr444be ya8 bgr48be bgr48le yuv420p9be yuv420p9le yuv420p10be yuv420p10le yuv422p10be yuv422p10le yuv444p9be yuv444p9le yuv444p10be yuv444p10le yuv422p9be yuv422p9le gbrp gbrp9be gbrp9le gbrp10be gbrp10le gbrp16be gbrp16le yuva422p yuva444p yuva420p9be yuva420p9le yuva422p9be yuva422p9le yuva444p9be yuva444p9le yuva420p10be yuva420p10le yuva422p10be yuva422p10le yuva444p10be yuva444p10le yuva420p16be yuva420p16le yuva422p16be yuva422p16le yuva444p16be yuva444p16le vdpau xyz12le xyz12be nv16 nv20le nv20be rgba64be rgba64le bgra64be bgra64le yvyu422 ya16be ya16le gbrap gbrap16be gbrap16le qsv mmal d3d11va_vld cuda 0rgb rgb0 0bgr bgr0 yuv420p12be yuv420p12le yuv420p14be yuv420p14le yuv422p12be yuv422p12le yuv422p14be yuv422p14le yuv444p12be yuv444p12le yuv444p14be yuv444p14le gbrp12be gbrp12le gbrp14be gbrp14le yuvj411p bayer_bggr8 bayer_rggb8 bayer_gbrg8 bayer_grbg8 bayer_bggr16le bayer_bggr16be bayer_rggb16le bayer_rggb16be bayer_gbrg16le bayer_gbrg16be bayer_grbg16le bayer_grbg16be yuv440p10le yuv440p10be yuv440p12le yuv440p12be ayuv64le ayuv64be videotoolbox_vld p010le p010be gbrap12be gbrap12le gbrap10be gbrap10le mediacodec gray12be gray12le gray10be gray10le p016le p016be d3d11 gray9be gray9le gbrpf32be gbrpf32le gbrapf32be gbrapf32le drm_prime opencl gray14be gray14le grayf32be grayf32le yuva422p12be yuva422p12le yuva444p12be yuva444p12le nv24 nv42 vulkan y210be y210le x2rgb10le x2rgb10be x2bgr10le x2bgr10be p210be p210le p410be p410le p216be p216le p416be p416le vuya rgbaf16be rgbaf16le vuyx p012le p012be y212be y212le xv30be xv30le xv36be xv36le rgbf32be rgbf32le rgbaf32be rgbaf32le p212be p212le p412be p412le gbrap14be gbrap14le d3d12 ayuv uyva vyu444 v30xbe v30xle rgbf16be rgbf16le rgba128be rgba128le rgb96be rgb96le y216be y216le xv48be xv48le gbrpf16be gbrpf16le gbrapf16be gbrapf16le grayf16be grayf16le amf gray32be gray32le yaf32be yaf32le yaf16be yaf16le gbrap32be gbrap32le yuv444p10msbbe yuv444p10msble yuv444p12msbbe yuv444p12msble gbrp10msbbe gbrp10msble gbrp12msbbe gbrp12msble ohcodec
+Filter 'format' formats:
+  in[0] 'default': yuv420p yuvj420p yuv422p yuvj422p yuv444p yuvj444p nv12 nv16 nv21 yuv420p10le yuv422p10le yuv444p10le nv20le gray gray10le
+  out[0] 'default': yuv420p yuvj420p yuv422p yuvj422p yuv444p yuvj444p nv12 nv16 nv21 yuv420p10le yuv422p10le yuv444p10le nv20le gray gray10le
+[AVFilterGraph @ 0000020146510240] query_formats: 4 queried, 9 merged, 0 already done, 0 delayed
+[graph -1 input from stream 0:0 @ 00000201437cea00] video frame properties congruent with link at pts_time: 0
+[Parsed_ass_0 @ 00000201437ce6c0] Copying data in avfilter.
+[h264 @ 0000020140754300] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 000002013fbf94c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbf9b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140008880] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[Parsed_ass_0 @ 00000201437ce6c0] fontselect: (Arial Black, 700, 0) -> Arial-Black, 0, Arial-Black
+[Parsed_ass_0 @ 00000201437ce6c0] Change happened at time ms:0.000000
+[h264 @ 0000020140008f40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[libx264 @ 00000201403808c0] using mv_range_thread = 24
+[libx264 @ 00000201403808c0] using SAR=1/1
+[libx264 @ 00000201403808c0] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 00000201403808c0] profile High, level 4.0, 4:2:0, 8-bit
+[libx264 @ 00000201403808c0] 264 - core 165 r3223 0480cb0 - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=30 lookahead_threads=5 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=25 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=23.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to 'test_ass.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf62.3.100
+  Stream #0:0(und), 0, 1/12800: Video: h264, 1 reference frame (avc1 / 0x31637661), yuv420p(tv, progressive, left), 1080x1920 [SAR 1:1 DAR 9:16], 0/1, q=2-31, 25 fps, 12800 tbn (default)
+    Metadata:
+      encoder         : Lavc62.11.100 libx264
+      handler_name    : VideoHandler
+      vendor_id       : [0][0][0][0]
+    Side data:
+      cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+[out#0/mp4 @ 0000020140592200] Starting thread...
+[h264 @ 00000201400095c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517a40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517680] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140517e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140516b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fb6e5c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb41c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140703500] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400ed1c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb5580] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 00000201400edb80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140754300] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 000002013fbf94c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbf9b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140008880] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140008f40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400095c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517a40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517680] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140517e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140516b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fb6e5c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb41c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140703500] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400ed1c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb5580] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 00000201400edb80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140754300] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 000002013fbf94c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbf9b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140008880] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140008f40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400095c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517a40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517680] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140517e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140516b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fb6e5c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb41c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140703500] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400ed1c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb5580] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 00000201400edb80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140754300] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 000002013fbf94c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbf9b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140008880] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140008f40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400095c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517a40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517680] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140517e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140516b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fb6e5c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb41c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140703500] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400ed1c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb5580] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 00000201400edb80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140754300] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 000002013fbf94c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbf9b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140008880] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140008f40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400095c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517a40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517680] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140517e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140516b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fb6e5c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb41c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140703500] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400ed1c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbb5580] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 00000201400edb80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140754300] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 000002013fbf94c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 000002013fbf9b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140008880] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140008f40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 00000201400095c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=   0 QP=9.32 NAL=3 Slice:I Poc:0   I:8160 P:0    SKIP:0    size=9991 bytes
+[h264 @ 0000020140517a40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0000020140517680] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0000020140517e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[libx264 @ 00000201403808c0] frame=   1 QP=9.73 NAL=2 Slice:P Poc:8   I:1    P:32   SKIP:8127 size=286 bytes
+[h264 @ 0000020140516b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=   2 QP=12.00 NAL=2 Slice:B Poc:4   I:3    P:18   SKIP:8139 size=100 bytes
+[h264 @ 000002013fb6e5c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=   3 QP=13.00 NAL=0 Slice:B Poc:2   I:0    P:11   SKIP:8149 size=84 bytes
+[h264 @ 000002013fbb41c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[libx264 @ 00000201403808c0] frame=   4 QP=13.00 NAL=0 Slice:B Poc:6   I:0    P:0    SKIP:8160 size=68 bytes
+[h264 @ 0000020140703500] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[libx264 @ 00000201403808c0] frame=   5 QP=9.65 NAL=2 Slice:P Poc:16  I:0    P:5    SKIP:8155 size=95 bytes
+[h264 @ 00000201400ed1c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=   6 QP=12.00 NAL=2 Slice:B Poc:12  I:0    P:6    SKIP:8154 size=81 bytes
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb64ec0] EOF while reading input
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb64ec0] Terminating thread with return code 0 (success)
+[h264 @ 000002013fbb5580] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=   7 QP=13.00 NAL=0 Slice:B Poc:10  I:0    P:0    SKIP:8160 size=68 bytes
+[h264 @ 00000201400edb80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[libx264 @ 00000201403808c0] frame=   8 QP=13.00 NAL=0 Slice:B Poc:14  I:0    P:0    SKIP:8160 size=68 bytes
+[h264 @ 0000020140754300] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[libx264 @ 00000201403808c0] frame=   9 QP=9.47 NAL=2 Slice:P Poc:24  I:0    P:1    SKIP:8159 size=87 bytes
+[h264 @ 000002013fbf94c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=  10 QP=12.00 NAL=2 Slice:B Poc:20  I:0    P:6    SKIP:8154 size=81 bytes
+[h264 @ 000002013fbf9b80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=  11 QP=13.00 NAL=0 Slice:B Poc:18  I:0    P:0    SKIP:8160 size=68 bytes
+[h264 @ 0000020140008880] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[libx264 @ 00000201403808c0] frame=  12 QP=13.00 NAL=0 Slice:B Poc:22  I:0    P:0    SKIP:8160 size=68 bytes
+[h264 @ 0000020140008f40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[libx264 @ 00000201403808c0] frame=  13 QP=9.00 NAL=2 Slice:P Poc:32  I:0    P:0    SKIP:8160 size=77 bytes
+[h264 @ 00000201400095c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=  14 QP=12.00 NAL=2 Slice:B Poc:28  I:0    P:6    SKIP:8154 size=81 bytes
+[h264 @ 0000020140517a40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[libx264 @ 00000201403808c0] frame=  15 QP=13.00 NAL=0 Slice:B Poc:26  I:0    P:0    SKIP:8160 size=68 bytes
+[vist#0:0/h264 @ 0000020140592040] [dec:h264 @ 000002014074bd00] Decoder thread received EOF packet
+[libx264 @ 00000201403808c0] frame=  16 QP=13.00 NAL=0 Slice:B Poc:30  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  17 QP=9.00 NAL=2 Slice:P Poc:40  I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  18 QP=12.00 NAL=2 Slice:B Poc:36  I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  19 QP=13.00 NAL=0 Slice:B Poc:34  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  20 QP=13.00 NAL=0 Slice:B Poc:38  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  21 QP=9.00 NAL=2 Slice:P Poc:48  I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  22 QP=12.00 NAL=2 Slice:B Poc:44  I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  23 QP=13.00 NAL=0 Slice:B Poc:42  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  24 QP=13.00 NAL=0 Slice:B Poc:46  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  25 QP=9.00 NAL=2 Slice:P Poc:56  I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  26 QP=12.00 NAL=2 Slice:B Poc:52  I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  27 QP=13.00 NAL=0 Slice:B Poc:50  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  28 QP=13.00 NAL=0 Slice:B Poc:54  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  29 QP=9.00 NAL=2 Slice:P Poc:64  I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  30 QP=12.00 NAL=2 Slice:B Poc:60  I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  31 QP=13.00 NAL=0 Slice:B Poc:58  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  32 QP=13.00 NAL=0 Slice:B Poc:62  I:0    P:0    SKIP:8160 size=68 bytes
+[vist#0:0/h264 @ 0000020140592040] [dec:h264 @ 000002014074bd00] Decoder returned EOF, finishing
+[libx264 @ 00000201403808c0] frame=  33 QP=9.00 NAL=2 Slice:P Poc:72  I:0    P:0    SKIP:8160 size=77 bytes
+[vist#0:0/h264 @ 0000020140592040] [dec:h264 @ 000002014074bd00] Terminating thread with return code 0 (success)
+[libx264 @ 00000201403808c0] frame=  34 QP=12.00 NAL=2 Slice:B Poc:68  I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  35 QP=13.00 NAL=0 Slice:B Poc:66  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  36 QP=13.00 NAL=0 Slice:B Poc:70  I:0    P:0    SKIP:8160 size=68 bytes
+[Parsed_ass_0 @ 00000201437ce6c0] Copying data in avfilter.
+[libx264 @ 00000201403808c0] frame=  37 QP=9.00 NAL=2 Slice:P Poc:80  I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  38 QP=12.00 NAL=2 Slice:B Poc:76  I:0    P:6    SKIP:8154 size=81 bytes
+[Parsed_ass_0 @ 00000201437ce6c0] Copying data in avfilter.
+[libx264 @ 00000201403808c0] frame=  39 QP=13.00 NAL=0 Slice:B Poc:74  I:0    P:0    SKIP:8160 size=68 bytes
+[Parsed_ass_0 @ 00000201437ce6c0] Copying data in avfilter.
+[libx264 @ 00000201403808c0] frame=  40 QP=13.00 NAL=0 Slice:B Poc:78  I:0    P:0    SKIP:8160 size=68 bytes
+[Parsed_ass_0 @ 00000201437ce6c0] Copying data in avfilter.
+[libx264 @ 00000201403808c0] frame=  41 QP=9.00 NAL=2 Slice:P Poc:88  I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  42 QP=12.00 NAL=2 Slice:B Poc:84  I:0    P:6    SKIP:8154 size=81 bytes
+[out_#0:0 @ 00000201437ce280] EOF on sink link out_#0:0:default.
+[vf#0:0 @ 000002013fb70680] Filtergraph returned EOF, finishing
+[vf#0:0 @ 000002013fb70680] All consumers returned EOF
+[libx264 @ 00000201403808c0] frame=  43 QP=13.00 NAL=0 Slice:B Poc:82  I:0    P:0    SKIP:8160 size=68 bytes
+[vf#0:0 @ 000002013fb70680] Terminating thread with return code 0 (success)
+[libx264 @ 00000201403808c0] frame=  44 QP=13.00 NAL=0 Slice:B Poc:86  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  45 QP=9.00 NAL=2 Slice:P Poc:96  I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  46 QP=12.00 NAL=2 Slice:B Poc:92  I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  47 QP=13.00 NAL=0 Slice:B Poc:90  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  48 QP=13.00 NAL=0 Slice:B Poc:94  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  49 QP=9.00 NAL=2 Slice:P Poc:104 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  50 QP=12.00 NAL=2 Slice:B Poc:100 I:0    P:6    SKIP:8154 size=81 bytes
+[vost#0:0/libx264 @ 000002013fb67580] [enc:libx264 @ 000002013fb28540] Encoder thread received EOF
+[libx264 @ 00000201403808c0] frame=  51 QP=13.00 NAL=0 Slice:B Poc:98  I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  52 QP=13.00 NAL=0 Slice:B Poc:102 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  53 QP=9.00 NAL=2 Slice:P Poc:112 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  54 QP=12.00 NAL=2 Slice:B Poc:108 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  55 QP=13.00 NAL=0 Slice:B Poc:106 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  56 QP=13.00 NAL=0 Slice:B Poc:110 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  57 QP=9.00 NAL=2 Slice:P Poc:120 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  58 QP=12.00 NAL=2 Slice:B Poc:116 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  59 QP=13.00 NAL=0 Slice:B Poc:114 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  60 QP=13.00 NAL=0 Slice:B Poc:118 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  61 QP=9.00 NAL=2 Slice:P Poc:128 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  62 QP=12.00 NAL=2 Slice:B Poc:124 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  63 QP=13.00 NAL=0 Slice:B Poc:122 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  64 QP=13.00 NAL=0 Slice:B Poc:126 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  65 QP=9.00 NAL=2 Slice:P Poc:136 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  66 QP=12.00 NAL=2 Slice:B Poc:132 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  67 QP=13.00 NAL=0 Slice:B Poc:130 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  68 QP=13.00 NAL=0 Slice:B Poc:134 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  69 QP=9.00 NAL=2 Slice:P Poc:144 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  70 QP=12.00 NAL=2 Slice:B Poc:140 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  71 QP=13.00 NAL=0 Slice:B Poc:138 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  72 QP=13.00 NAL=0 Slice:B Poc:142 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  73 QP=9.00 NAL=2 Slice:P Poc:152 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  74 QP=12.00 NAL=2 Slice:B Poc:148 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  75 QP=13.00 NAL=0 Slice:B Poc:146 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  76 QP=13.00 NAL=0 Slice:B Poc:150 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  77 QP=9.00 NAL=2 Slice:P Poc:160 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  78 QP=12.00 NAL=2 Slice:B Poc:156 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  79 QP=13.00 NAL=0 Slice:B Poc:154 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  80 QP=13.00 NAL=0 Slice:B Poc:158 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  81 QP=9.00 NAL=2 Slice:P Poc:168 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  82 QP=12.00 NAL=2 Slice:B Poc:164 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  83 QP=13.00 NAL=0 Slice:B Poc:162 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  84 QP=13.00 NAL=0 Slice:B Poc:166 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  85 QP=9.00 NAL=2 Slice:P Poc:176 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  86 QP=12.00 NAL=2 Slice:B Poc:172 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  87 QP=13.00 NAL=0 Slice:B Poc:170 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  88 QP=13.00 NAL=0 Slice:B Poc:174 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  89 QP=9.00 NAL=2 Slice:P Poc:184 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  90 QP=12.00 NAL=2 Slice:B Poc:180 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  91 QP=13.00 NAL=0 Slice:B Poc:178 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  92 QP=13.00 NAL=0 Slice:B Poc:182 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  93 QP=9.00 NAL=2 Slice:P Poc:192 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  94 QP=12.00 NAL=2 Slice:B Poc:188 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  95 QP=13.00 NAL=0 Slice:B Poc:186 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  96 QP=13.00 NAL=0 Slice:B Poc:190 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame=  97 QP=9.00 NAL=2 Slice:P Poc:200 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame=  98 QP=12.00 NAL=2 Slice:B Poc:196 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame=  99 QP=13.00 NAL=0 Slice:B Poc:194 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 100 QP=13.00 NAL=0 Slice:B Poc:198 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 101 QP=9.00 NAL=2 Slice:P Poc:208 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame= 102 QP=12.00 NAL=2 Slice:B Poc:204 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame= 103 QP=13.00 NAL=0 Slice:B Poc:202 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 104 QP=13.00 NAL=0 Slice:B Poc:206 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 105 QP=9.00 NAL=2 Slice:P Poc:216 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame= 106 QP=12.00 NAL=2 Slice:B Poc:212 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame= 107 QP=13.00 NAL=0 Slice:B Poc:210 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 108 QP=13.00 NAL=0 Slice:B Poc:214 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 109 QP=9.00 NAL=2 Slice:P Poc:224 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame= 110 QP=12.00 NAL=2 Slice:B Poc:220 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame= 111 QP=13.00 NAL=0 Slice:B Poc:218 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 112 QP=13.00 NAL=0 Slice:B Poc:222 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 113 QP=10.00 NAL=2 Slice:P Poc:232 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame= 114 QP=12.00 NAL=2 Slice:B Poc:228 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame= 115 QP=13.00 NAL=0 Slice:B Poc:226 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 116 QP=13.00 NAL=0 Slice:B Poc:230 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 117 QP=11.00 NAL=2 Slice:P Poc:240 I:0    P:0    SKIP:8160 size=77 bytes
+[libx264 @ 00000201403808c0] frame= 118 QP=12.00 NAL=2 Slice:B Poc:236 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame= 119 QP=13.00 NAL=0 Slice:B Poc:234 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 120 QP=13.00 NAL=0 Slice:B Poc:238 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 121 QP=13.00 NAL=2 Slice:P Poc:248 I:0    P:0    SKIP:8160 size=76 bytes
+[libx264 @ 00000201403808c0] frame= 122 QP=12.00 NAL=2 Slice:B Poc:244 I:0    P:6    SKIP:8154 size=81 bytes
+[libx264 @ 00000201403808c0] frame= 123 QP=13.00 NAL=0 Slice:B Poc:242 I:0    P:0    SKIP:8160 size=68 bytes
+[libx264 @ 00000201403808c0] frame= 124 QP=13.00 NAL=0 Slice:B Poc:246 I:0    P:0    SKIP:8160 size=68 bytes
+[vost#0:0/libx264 @ 000002013fb67580] Terminating thread with return code 0 (success)
+[out#0/mp4 @ 0000020140592200] All streams finished
+[out#0/mp4 @ 0000020140592200] Terminating thread with return code 0 (success)
+[AVIOContext @ 000002014074b9c0] Statistics: 22447 bytes written, 2 seeks, 4 writeouts
+[out#0/mp4 @ 0000020140592200] Output file #0 (test_ass.mp4):
+[out#0/mp4 @ 0000020140592200]   Output stream #0:0 (video): 125 frames encoded; 125 packets muxed (20066 bytes); 
+[out#0/mp4 @ 0000020140592200]   Total: 125 packets (20066 bytes) muxed
+[out#0/mp4 @ 0000020140592200] video:20KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 11.845909%
+frame=  125 fps=0.0 q=-1.0 Lsize=      22KiB time=00:00:04.92 bitrate=  36.5kbits/s speed=13.9x elapsed=0:00:00.35    
+[libx264 @ 00000201403808c0] frame I:1     Avg QP: 9.32  size:  9991
+[libx264 @ 00000201403808c0] frame P:31    Avg QP: 9.29  size:    85
+[libx264 @ 00000201403808c0] frame B:93    Avg QP:12.67  size:    73
+[libx264 @ 00000201403808c0] consecutive B-frames:  0.8%  0.0%  0.0% 99.2%
+[libx264 @ 00000201403808c0] mb I  I16..4: 98.0%  0.0%  1.9%
+[libx264 @ 00000201403808c0] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.0%  0.0%  0.0%  0.0%  0.0%    skip:100.0%
+[libx264 @ 00000201403808c0] mb B  I16..4:  0.0%  0.0%  0.0%  B16..8:  0.0%  0.0%  0.0%  direct: 0.0%  skip:100.0%  L0:86.1% L1:13.9% BI: 0.0%
+[libx264 @ 00000201403808c0] 8x8 transform intra:0.0% inter:26.7%
+[libx264 @ 00000201403808c0] coded y,uvDC,uvAC intra: 1.4% 1.9% 1.9% inter: 0.0% 0.0% 0.0%
+[libx264 @ 00000201403808c0] i16 v,h,dc,p: 99%  0%  1%  0%
+[libx264 @ 00000201403808c0] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 25% 75%  0%  0%  0%  0%  0%  0%  0%
+[libx264 @ 00000201403808c0] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 31% 29% 12%  4%  5%  4%  6%  3%  6%
+[libx264 @ 00000201403808c0] i8c dc,h,v,p: 98%  1%  1%  0%
+[libx264 @ 00000201403808c0] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 00000201403808c0] ref P L0: 90.8%  6.6%  2.6%
+[libx264 @ 00000201403808c0] ref B L0:  0.0% 100.0%
+[libx264 @ 00000201403808c0] kb/s:31.00
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb64ec0] Input file #0 (test_base.mp4):
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb64ec0]   Input stream #0:0 (video): 125 packets read (9891 bytes); 125 frames decoded; 0 decode errors; 
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002013fb64ec0]   Total: 125 packets (9891 bytes) demuxed
+[AVIOContext @ 000002013fb65640] Statistics: 12267 bytes read, 0 seeks
+
+Exiting with exit code 0
