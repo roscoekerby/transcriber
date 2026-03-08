@@ -30,6 +30,21 @@ CONFIG_PATH = Path(__file__).parent / "caption_config.json"
 PREVIEW_W   = 540
 PREVIEW_H   = 304   # 16:9
 
+# ── Safe zone margins (fraction of frame) ──────────────────────────────────────
+# Portrait 9:16 — TikTok / Instagram Reels / YouTube Shorts
+#   Top  8%  : status bar, platform header
+#   Bottom 20%: username, caption text, CTA, music bar
+#   Left  3%  : minimal chrome
+#   Right 8%  : like / comment / share / follow buttons
+SAFE_ZONE_PORTRAIT  = {"top": 0.08, "bottom": 0.20, "left": 0.03, "right": 0.08}
+
+# Landscape 16:9 — YouTube standard
+#   Top  5%  : avoid top crop / watermarks
+#   Bottom 8%: avoid progress bar / subtitles area overlap
+#   Left  5% : avoid edge crop
+#   Right 5% : avoid edge crop
+SAFE_ZONE_LANDSCAPE = {"top": 0.05, "bottom": 0.08, "left": 0.05, "right": 0.05}
+
 
 # ── SRT / time helpers ─────────────────────────────────────────────────────────
 
@@ -497,6 +512,7 @@ class CaptionApp(tk.Tk):
         self._canvas_w        = PREVIEW_W      # explicit canvas size — avoids winfo race
         self._canvas_h        = PREVIEW_H
         self._display_rotate  = 0             # rotation angle from video metadata (0/90/180/270)
+        self._show_safe_zone  = tk.BooleanVar(value=False)
         self._build_ui()
         self.after(200, self._update_preview)   # initial render after layout settles
 
@@ -784,6 +800,20 @@ class CaptionApp(tk.Tk):
                   font=("Segoe UI", 8), bg=C["PANEL"], fg=C["MUT"],
                   relief="flat", bd=0, padx=8, pady=2, cursor="hand2").pack(side="right")
 
+        # Safe zone overlay toggle
+        szf = tk.Frame(prev_tab, bg=C["BG"], pady=1); szf.pack(fill="x")
+        tk.Checkbutton(szf, text="Show safe zone overlay  (TikTok / Reels / YouTube)",
+                       variable=self._show_safe_zone,
+                       command=self._update_preview,
+                       font=("Segoe UI", 8), fg=C["MUT"], bg=C["BG"],
+                       selectcolor=C["ENTRY"], activebackground=C["BG"],
+                       activeforeground=C["TEXT"], relief="flat", bd=0,
+                       cursor="hand2").pack(side="left")
+        self._safe_zone_warn = tk.Label(prev_tab, text="",
+                                        font=("Segoe UI", 8, "bold"),
+                                        fg="#ffd700", bg=C["BG"], anchor="w")
+        self._safe_zone_warn.pack(fill="x", padx=4)
+
         # ── Tab 2: Script / SRT Editor ─────────────────────────────────────────
         srt_tab = tk.Frame(nb, bg=C["BG"])
         nb.add(srt_tab, text="  Script / SRT Editor  ")
@@ -843,6 +873,12 @@ class CaptionApp(tk.Tk):
         self._pos_custom = False
         self._pos_lbl.config(text="Position: style default")
         self._update_preview()
+
+    def _get_safe_zone(self) -> dict:
+        """Return safe zone margin fractions based on the loaded video's aspect ratio."""
+        vw, vh = getattr(self, "_video_res", (1920, 1080))
+        aspect = vw / vh if vh else 16 / 9
+        return SAFE_ZONE_PORTRAIT if aspect < 1.0 else SAFE_ZONE_LANDSCAPE
 
     # ── Video player ───────────────────────────────────────────────────────────
 
@@ -1086,6 +1122,44 @@ class CaptionApp(tk.Tk):
                 x0,y0,x1,y1 = bbox
                 self._canvas.create_rectangle(x0-4, y0-4, x1+4, y1+4,
                                               outline="#e94560", dash=(4,3), width=1)
+                # ── Safe zone overlay ───────────────────────────────────────
+                if self._show_safe_zone.get():
+                    sz = self._get_safe_zone()
+                    sx0 = int(sz["left"]   * w)
+                    sy0 = int(sz["top"]    * h)
+                    sx1 = int((1 - sz["right"])  * w)
+                    sy1 = int((1 - sz["bottom"]) * h)
+                    # Shade the four unsafe strips (stipple = semi-transparent)
+                    _shade_args = dict(fill="#000066", stipple="gray50", outline="")
+                    self._canvas.create_rectangle(0,   0,   w,   sy0, **_shade_args)  # top
+                    self._canvas.create_rectangle(0,   sy1, w,   h,   **_shade_args)  # bottom
+                    self._canvas.create_rectangle(0,   sy0, sx0, sy1, **_shade_args)  # left
+                    self._canvas.create_rectangle(sx1, sy0, w,   sy1, **_shade_args)  # right
+                    # Safe zone border
+                    self._canvas.create_rectangle(sx0, sy0, sx1, sy1,
+                                                  outline="#00e676", width=1, dash=(6, 3))
+                    self._canvas.create_text(sx0+4, sy0+3, text="SAFE ZONE",
+                                             anchor="nw", fill="#00e676",
+                                             font=("Segoe UI", 7))
+                    # Warn if caption bounding box breaks the safe zone
+                    cap_in_zone = (x0 >= sx0 and y0 >= sy0 and x1 <= sx1 and y1 <= sy1)
+                    if hasattr(self, "_safe_zone_warn"):
+                        if cap_in_zone:
+                            self._safe_zone_warn.config(
+                                text="✓  Caption within safe zone",
+                                fg="#64ffda")
+                        else:
+                            violations = []
+                            if y0 < sy0: violations.append("top")
+                            if y1 > sy1: violations.append("bottom")
+                            if x0 < sx0: violations.append("left")
+                            if x1 > sx1: violations.append("right")
+                            self._safe_zone_warn.config(
+                                text=f"⚠  Caption outside safe zone ({', '.join(violations)}) — may be hidden by UI",
+                                fg="#ffd700")
+                elif hasattr(self, "_safe_zone_warn"):
+                    self._safe_zone_warn.config(text="")
+                # ────────────────────────────────────────────────────────────
                 self._canvas.create_text(w//2, h-10,
                                          text="click or drag anywhere to reposition",
                                          fill="#8892b0", font=("Segoe UI", 7))
@@ -1095,6 +1169,8 @@ class CaptionApp(tk.Tk):
                                          fill="#e94560", font=("Segoe UI", 9), justify="center")
         else:
             # Fallback: no PIL
+            if hasattr(self, "_safe_zone_warn"):
+                self._safe_zone_warn.config(text="")
             self._canvas.delete("all")
             self._canvas.create_rectangle(0, 0, w, h, fill="#0d0d1a")
             if self._frame_img is None:
