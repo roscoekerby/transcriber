@@ -7,5 +7,6 @@
   "whisper_model": "medium",
   "pos_x": 0.5346153846153846,
   "pos_y": 0.45454545454545453,
-  "font_size": 88
+  "font_size": 88,
+  "lines_mode": "Auto"
 }

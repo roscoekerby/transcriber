@@ -9,7 +9,7 @@ Adds styled captions to any video file.
 Requires: ffmpeg on PATH, faster-whisper (optional), Pillow (pip install Pillow)
 """
 
-import os, re, json, threading, subprocess, tempfile
+import os, re, json, threading, subprocess, tempfile, math
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -115,6 +115,62 @@ def apply_replacements(caps: list, replacements: dict) -> list:
                 text = re.sub(re.escape(old), new, text, flags=re.IGNORECASE)
         result.append({**cap, "text": text})
     return result
+
+
+# ── Caption line-wrapping ──────────────────────────────────────────────────────
+
+def wrap_caption_text(text: str, mode: str, font_pil, max_width_px: int) -> str:
+    """
+    Wrap caption text according to mode.
+      "1"    – single line (no wrap)
+      "2"    – force 2 lines, words split as evenly as possible
+      "3"    – force 3 lines, words split as evenly as possible
+      "Auto" – try 1 line; if wider than max_width_px try 2; then 3
+    Returns text with \\n separating lines (build_ass converts to \\N for ASS).
+    """
+    words = text.split()
+    if not words:
+        return text
+
+    def _split_evenly(n):
+        n = min(n, len(words))
+        per = math.ceil(len(words) / n)
+        chunks = [words[i:i+per] for i in range(0, len(words), per)]
+        return "\n".join(" ".join(c) for c in chunks if c)
+
+    if mode == "1":
+        return text
+    if mode in ("2", "3"):
+        return _split_evenly(int(mode))
+
+    # ── Auto mode ────────────────────────────────────────────────────────────
+    if font_pil is None or max_width_px <= 0:
+        return text
+
+    from PIL import Image as _Im, ImageDraw as _Id
+    _tmp = _Im.new("RGB", (1, 1))
+    _d   = _Id.Draw(_tmp)
+
+    def _tw(t):
+        bb = _d.textbbox((0, 0), t, font=font_pil)
+        return bb[2] - bb[0]
+
+    # 1 line fits?
+    if _tw(text) <= max_width_px:
+        return text
+
+    # Find the 2-line split that minimises the wider of the two lines
+    if len(words) >= 2:
+        best, best_w = None, float("inf")
+        for i in range(1, len(words)):
+            w = max(_tw(" ".join(words[:i])), _tw(" ".join(words[i:])))
+            if w < best_w:
+                best_w, best = w, i
+        if best is not None and best_w <= max_width_px:
+            return "\n".join([" ".join(words[:best]), " ".join(words[best:])])
+
+    # Fall back to 3 lines
+    return _split_evenly(3)
 
 
 # ── ASS subtitle generation ────────────────────────────────────────────────────
@@ -513,6 +569,7 @@ class CaptionApp(tk.Tk):
         self._canvas_h        = PREVIEW_H
         self._display_rotate  = 0             # rotation angle from video metadata (0/90/180/270)
         self._show_safe_zone  = tk.BooleanVar(value=False)
+        self.lines_var        = tk.StringVar(value=self.cfg.get("lines_mode", "Auto"))
         self._build_ui()
         self.after(200, self._update_preview)   # initial render after layout settles
 
@@ -700,6 +757,20 @@ class CaptionApp(tk.Tk):
             tk.Label(wf, text="(1=word  6=natural  15=long)", font=("Segoe UI", 7),
                      fg=C["MUT"], bg=C["PANEL"]).pack(side="left")
 
+            # Lines per caption
+            lf2 = tk.Frame(p, bg=C["PANEL"]); lf2.pack(fill="x", padx=14, pady=(4,1))
+            tk.Label(lf2, text="Lines / Caption", font=("Segoe UI", 8, "bold"),
+                     fg=C["MUT"], bg=C["PANEL"], width=16, anchor="w").pack(side="left")
+            for val, lbl in [("1", "1"), ("2", "2"), ("3", "3"), ("Auto", "Auto")]:
+                tk.Radiobutton(lf2, text=lbl, variable=self.lines_var, value=val,
+                               command=self._update_preview,
+                               font=("Segoe UI", 8), fg=C["TEXT"], bg=C["PANEL"],
+                               selectcolor=C["ENTRY"],
+                               activebackground=C["PANEL"], activeforeground=C["TEXT"],
+                               ).pack(side="left", padx=3)
+            tk.Label(lf2, text="(Auto wraps to 2–3 when text overflows)",
+                     font=("Segoe UI", 7), fg=C["MUT"], bg=C["PANEL"]).pack(side="left", padx=6)
+
             mf = tk.Frame(p, bg=C["PANEL"]); mf.pack(fill="x", padx=14, pady=(6,2))
             tk.Label(mf, text="Whisper Model", font=("Segoe UI", 8, "bold"),
                      fg=C["MUT"], bg=C["PANEL"], width=16, anchor="w").pack(side="left")
@@ -879,6 +950,26 @@ class CaptionApp(tk.Tk):
         vw, vh = getattr(self, "_video_res", (1920, 1080))
         aspect = vw / vh if vh else 16 / 9
         return SAFE_ZONE_PORTRAIT if aspect < 1.0 else SAFE_ZONE_LANDSCAPE
+
+    def _apply_line_wrap(self, text: str, canvas_w: int, canvas_h: int,
+                         style: dict, fontsize: int) -> str:
+        """Wrap text for preview using the current Lines / Caption setting."""
+        mode = self.lines_var.get()
+        if not PIL_AVAILABLE:
+            return text
+        vres = getattr(self, "_video_res", (1920, 1080))
+        scale = min(canvas_w / vres[0], canvas_h / vres[1])
+        pil_fs = max(6, int(fontsize * style.get("PIL_Scale", 1.0) * scale))
+        font = _load_pil_font(style["Fontname"], style["Bold"], pil_fs)
+        sz = self._get_safe_zone()
+        sx0 = sz["left"] * canvas_w
+        sx1 = (1 - sz["right"]) * canvas_w
+        # Max symmetric text width that stays within safe zone at the current pos_x.
+        # The caption is centered at pos_x, so the tighter of the two edges wins.
+        cx = self._pos_x * canvas_w
+        half = min(cx - sx0, sx1 - cx)
+        avail_w = max(1, int(2 * half)) if half > 0 else int(sx1 - sx0)
+        return wrap_caption_text(text, mode, font, avail_w)
 
     # ── Video player ───────────────────────────────────────────────────────────
 
@@ -1100,6 +1191,9 @@ class CaptionApp(tk.Tk):
             try:
                 from PIL import ImageTk
                 fs = self._get_fontsize() if hasattr(self, "fontsize_var") else 28
+                # Apply line wrapping for preview
+                if cap_text and hasattr(self, "lines_var"):
+                    text = self._apply_line_wrap(text, w, h, style, fs)
                 # Compute and display diagnostic font size info
                 _scale = min(w / vres[0], h / vres[1])
                 _preview_fs = max(6, int(fs * _scale))
@@ -1290,6 +1384,7 @@ class CaptionApp(tk.Tk):
             "pos_x": self._pos_x if self._pos_custom else None,
             "pos_y": self._pos_y if self._pos_custom else None,
             "font_size": self._get_fontsize(),
+            "lines_mode": self.lines_var.get(),
         })
         save_config(self.cfg)
         self.btn.config(state="disabled", text="Processing…")
@@ -1301,11 +1396,12 @@ class CaptionApp(tk.Tk):
                                self.cfg["last_output_dir"], self.cfg["style"],
                                self.cfg["words_per_caption"], self.cfg["replacements"],
                                self.cfg["whisper_model"], pos_override,
-                               self.cfg["font_size"], editor_srt),
+                               self.cfg["font_size"], editor_srt,
+                               self.cfg["lines_mode"]),
                          daemon=True).start()
 
     def _worker(self, video, srt_path, out_dir, style, words_per,
-                replacements, model, pos_override, fontsize=28, editor_srt=""):
+                replacements, model, pos_override, fontsize=28, editor_srt="", lines_mode="Auto"):
         video_p = Path(video)
         try:
             # 1. Load / generate captions
@@ -1368,8 +1464,33 @@ class CaptionApp(tk.Tk):
             if pos_override:
                 self._log(f"Custom position: {pos_override[0]:.2f}, {pos_override[1]:.2f}", "info")
 
-            self._log(f"Font size: {fontsize}px", "info")
-            # 3. Build ASS + burn
+            self._log(f"Font size: {fontsize}px  |  Lines: {lines_mode}", "info")
+
+            # 3. Apply line wrapping for export
+            if lines_mode != "1" and PIL_AVAILABLE:
+                s = STYLES[style]
+                # Scale=1 since we measure in ASS play_res coordinate space
+                pil_fs = max(6, int(fontsize * s.get("PIL_Scale", 1.0)))
+                exp_font = _load_pil_font(s["Fontname"], s["Bold"], pil_fs)
+                exp_sz = SAFE_ZONE_PORTRAIT if res_x < res_y else SAFE_ZONE_LANDSCAPE
+                # Position-aware available width (same logic as preview)
+                if pos_override:
+                    exp_cx = pos_override[0] * res_x
+                else:
+                    exp_px, _ = default_pos(STYLES[style])
+                    exp_cx = exp_px * res_x
+                exp_sx0 = exp_sz["left"] * res_x
+                exp_sx1 = (1 - exp_sz["right"]) * res_x
+                exp_half = min(exp_cx - exp_sx0, exp_sx1 - exp_cx)
+                exp_avail_w = max(1, int(2 * exp_half)) if exp_half > 0 else int(exp_sx1 - exp_sx0)
+                wrapped_caps = []
+                for cap in captions:
+                    wrapped = wrap_caption_text(cap["text"], lines_mode, exp_font, exp_avail_w)
+                    wrapped_caps.append({**cap, "text": wrapped})
+                captions = wrapped_caps
+                self._log(f"Line-wrapped captions ({lines_mode} mode).", "info")
+
+            # 4. Build ASS + burn
             ass_content = build_ass(captions, style, res_x, res_y, pos_override, fontsize=fontsize)
             ass_tmp = os.path.join(tempfile.gettempdir(), "caption_burn_tmp.ass")
             with open(ass_tmp, "w", encoding="utf-8") as f:
